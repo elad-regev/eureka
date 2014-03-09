@@ -157,7 +157,7 @@ public class DiscoveryClient implements LookupService {
     private Timer instanceInfoReplicatorTimer = new Timer(PREFIX
             + "InstanceInfo-Replictor", true);
 
-    DiscoveryClient(InstanceInfo myInfo, EurekaClientConfig config) {
+    public DiscoveryClient(InstanceInfo myInfo, EurekaClientConfig config) {
         try {
             clientConfig = config;
             final String zone = getZone(myInfo);

@@ -29,16 +29,29 @@ subprojects {
     }
 }
 
+apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 project(':eureka-client') {
+	apply plugin: 'java'
+	apply plugin: 'maven-publish'
+
+	version = '1.1.250'	
+	groupId='com.netflix.eureka'
+	artifactId='eureka-client'
+
     dependencies {
         compile 'com.thoughtworks.xstream:xstream:1.4.2'
         compile 'com.netflix.archaius:archaius-core:0.3.3'
-        compile 'javax.ws.rs:jsr311-api:1.1.1'
+        compile 'javax.ws.rs:jsr311-api:1.1.1'		
         compile 'com.netflix.servo:servo-core:0.4.36'
-        compile 'com.sun.jersey:jersey-core:1.11'
-        compile 'com.sun.jersey:jersey-client:1.11'
-        compile 'com.sun.jersey.contribs:jersey-apache-client4:1.8'
+		
+        // compile 'com.sun.jersey:jersey-core:1.11'
+        // compile 'com.sun.jersey:jersey-client:1.11'
+        // compile 'com.sun.jersey.contribs:jersey-apache-client4:1.8'
+		// compile 'org.glassfish.jersey.core:jersey-core:2.4.1'
+		compile 'org.glassfish.jersey.core:jersey-client:2.4.1'
+		
         compile 'org.apache.httpcomponents:httpclient:4.2.1'
         compile 'com.netflix.ribbon:ribbon-httpclient:0.3.4'
         runtime 'org.codehaus.jettison:jettison:1.2'
@@ -46,6 +59,33 @@ project(':eureka-client') {
         testCompile 'junit:junit:4.10'
         testCompile 'org.mortbay.jetty:jetty:6.1H.22'
     }
+
+	task sourceJar(type: Jar) {
+		from sourceSets.main.allJava
+	}
+	
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				from components.java
+				
+				artifact sourceJar {
+					classifier "src"
+				}
+				
+			}
+		}
+		repositories {
+			maven {
+				credentials {
+					username 'admin'
+					password 'password'
+				}
+				url "http://192.168.4.16:8081/artifactory/mdmd3-dev"
+			}
+		}
+	}
+	
 }
 
 project(':eureka-core') {
